@@ -8,6 +8,7 @@ const path                   = require( 'path' );
 const url                    = require( 'url' );
 const regex                  = /(ST|US),GS,\s+([0-9.]+)(lb|kb)/g;
 const currentEnvironment     = process.env.NODE_ENV;
+const targetUrl              = process.env.URL === undefined ? 'https://oms.fulfillment.com' : process.env.URL;
 const isOnline               = require( 'is-online' );
 const possibleComNames       = [
   "/dev/cu.usbserial",
@@ -124,21 +125,15 @@ function createWindow(){
   // When in development environment, open the Redux DevTools Extension and the Chrome DevTools.
   // Need to have the Chrome Extension at the location below.
   // If on MAC and have Redux DevTools installed, then it should be at this location.
-  if(currentEnvironment === 'DEV') {
-	BrowserWindow.addDevToolsExtension( "../../Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.15.1_0/" );
-	// Open the DevTools.
-	mainWindow.webContents.openDevTools();
-	mainWindow.loadURL( 'http://localhost:3000' );
-  }
-  else if(currentEnvironment === 'WINDEV') {
-	// Open the DevTools.
-	mainWindow.webContents.openDevTools();
-	mainWindow.loadURL( 'http://localhost:3000' );
-  }
-  else {
-	// and load the index.html of the app.
-	mainWindow.loadURL( 'https://oms.fulfillment.com/' );
-  }
+    if (currentEnvironment === 'DEV') {
+        if (process.platform !== 'win32') {
+            BrowserWindow.addDevToolsExtension("../../Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.15.1_0/");
+        }
+        // Open the DevTools.
+        mainWindow.webContents.openDevTools();
+    }
+    // and load the index.html of the app.
+    mainWindow.loadURL(targetUrl);
   // Emitted when the window is closed.
   mainWindow.on( 'closed', function(){
 	// Dereference the window object, usually you would store windows
